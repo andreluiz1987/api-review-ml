@@ -7,6 +7,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.rabbitbr.apireviewml.domain.Review;
 import com.rabbitbr.apireviewml.dto.ReviewDTO;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,8 @@ public class ReviewService {
     var response = client.search(s -> s.index(index)
             .query(MatchAllQuery.of(m -> m)._toQuery())
         , Review.class);
-    return response.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
+    List<Review> list = response.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
+    Collections.reverse(list);
+    return list;
   }
 }
